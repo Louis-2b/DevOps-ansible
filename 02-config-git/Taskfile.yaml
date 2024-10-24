@@ -29,7 +29,7 @@ tasks:
   04-Commit-changes:
     desc: "Effectuer un commit avec un message"
     cmds:
-      - git commit -m "Mis à jour du fichier readme, first commit"  
+      - git commit -m "first version of the inventory file, added hosts."  
 
   05-Push-changes:
     desc: "Pousser les modifications vers la branche principale"

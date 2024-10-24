@@ -1,0 +1,92 @@
+version: "3"
+
+env:
+  BORDER: double
+  BORDER_FOREGROUND: "212"
+  PADDING: "1 1"
+  MARGIN: "1 1"
+
+
+
+tasks:
+  01-Verifier-ssh:
+    desc: "Vérifier l'emplacement de ssh"
+    cmds:
+      - which ssh
+
+  02-Rechercher-openssh-client:
+    desc: "Rechercher le package openssh-client"
+    cmds:
+      - apt search openssh-client
+
+  03-Creer-key-ssh-default:
+    desc: "Générer une nouvelle clé SSH de type ED25519"
+    cmds:
+      - ssh-keygen -t ed25519 -C "tubie default"
+      
+  04-Afficher-key-publique-ssh:
+    desc: "Afficher le contenu de la clé publique SSH"
+    cmds:
+      - cat ~/.ssh/id_ed25519.pub
+
+  05-Afficher-key-privé-ssh:
+    desc: "Afficher le contenu de la clé privé SSH"
+    cmds:
+      - cat ~/.ssh/id_ed25519    
+
+  06-Connexion-hote-distant:
+    desc: "Se connecter à l'hôte distant helm@192.168.222.80"
+    cmds:
+      - ssh helm@192.168.222.80    
+
+  07-Lister-repertoire-ssh:
+    desc: "Lister le contenu du répertoire .ssh"
+    cmds:
+      - ls -la ~/.ssh
+  
+  08-Creer-fichier-config-ssh:
+    desc: "Créer le fichier config dans le répertoire .ssh"
+    cmds:
+      - touch ~/.ssh/config
+      - |
+         echo "
+          Host kubernetes
+            Hostname 192.168.222.80
+            Port 22
+            User helm
+          " >> ~/.ssh/config
+      - sleep 3
+      - ssh kubernetes 
+
+  09-Copier-key-publique-ssh:
+    desc: "Copier la clé publique SSH sur l'hôte distant"
+    cmds:
+      - ssh-copy-id -i ~/.ssh/id_ed25519.pub helm@192.168.222.80
+      
+  10-Connexion-hote-distant:
+    desc: "Se connecter à l'hôte distant helm@192.168.222.80"
+    cmds:
+      - ssh kubernetes
+
+  11-Creer-key-ssh-ansible:
+    desc: "Générer une nouvelle clé SSH de type ED25519"
+    cmds:
+      - ssh-keygen -t ed25519 -C "ansible" -f /home/ansible/.ssh/ansible
+# Entrez le fichier dans lequel enregistrer la clé (/home/ansible/.ssh/id_ed25519) : /home/ansible/.ssh/ansible
+
+  12-Copier-key-publique-ssh:
+    desc: "Copier la clé publique SSH sur l'hôte distant"
+    cmds:
+      - ssh-copy-id -i ~/.ssh/ansible.pub helm@192.168.222.80
+
+  13-Copier-key-publique-ssh-ansible:
+    desc: "Connexion à l'hôte distant avec la clé privée SSH ansible"
+    cmds:
+      - ssh -i ~/.ssh/ansible helm@192.168.222.80
+      
+  14-Demarrer-ssh-agent:
+    desc: "Démarrer l'agent SSH et ajouter la clé"
+    cmds:
+      - eval $(ssh-agent) && ssh-add && ssh-add -l
+      - sleep 3
+      - ssh kubernetes

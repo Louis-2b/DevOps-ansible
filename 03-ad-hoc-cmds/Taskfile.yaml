@@ -1,0 +1,29 @@
+version: "3"
+
+env:
+  BORDER: double
+  BORDER_FOREGROUND: "212"
+  PADDING: "1 1"
+  MARGIN: "1 1"
+
+
+
+tasks:
+  01-Mis-à-jour-système:
+    desc: "Mettre à jour la liste des paquets et installer les mises à jour disponibles"
+    cmds:
+      - sudo apt update && sudo apt upgrade -y
+
+  02-Installer-ansible:
+    desc: "Installer Ansible à partir des dépôts APT"
+    cmds:
+      - sudo apt install ansible
+
+  08-Creer-fichier-inventory:
+    desc: "Créer le fichier config dans le répertoire .ssh"
+    cmds:
+      - touch ~/ansible/DevOps-ansible/inventory
+      - |
+         echo "
+         192.168.222.80
+         " >> ~/ansible/DevOps-ansible/inventory  
