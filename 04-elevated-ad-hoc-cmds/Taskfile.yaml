@@ -1,0 +1,49 @@
+version: "3"
+
+env:
+  BORDER: double
+  BORDER_FOREGROUND: "212"
+  PADDING: "1 1"
+  MARGIN: "1 1"
+
+
+
+tasks:
+  01-Mis-à-jour-système:
+    desc: "Mettre à jour la liste des paquets et installer les mises à jour disponibles"
+    cmds:
+      - sudo apt update && sudo apt upgrade -y
+
+  02-Mettre-à-jour-cache-Apt:
+    desc: "Mettre à jour le cache APT sur tous les hôtes Ansible"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible all -m apt -a update_cache=true --become --ask-become-pass
+
+  03-Installer-Vim:
+# vim-nox est un paquet pour le célèbre éditeur de texte Vim, spécifiquement destiné aux systèmes basés sur Debian (comme Ubuntu). 
+    desc: "Installer le paquet vim-nox sur tous les hôtes Ansible"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible all -m apt -a name=vim-nox --become --ask-become-pass 
+
+  04-Installer-Tmux:
+# tmux est un multiplexeur de terminaux, ce qui signifie qu'il vous permet de gérer plusieurs sessions de terminal dans une seule fenêtre.
+    desc: "Installer le paquet tmux sur tous les hôtes Ansible"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible all -m apt -a name=tmux --become --ask-become-pass
+
+  05-Installer-snapd:
+# snapd est un service qui gère les paquets Snap sur les systèmes d'exploitation basés sur Linux.
+    desc: "Installer le paquet snapd sur tous les hôtes Ansible"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible all -m apt -a name=snapd --become --ask-become-pass
+
+  06-Installer-latest-snapd:
+# snapd est un service qui gère les paquets Snap sur les systèmes d'exploitation basés sur Linux.
+    desc: "Installer le paquet snapd sur sa dernière version disponible sur tous les hôtes Ansible"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible all -m apt -a "name=snapd state=latest" --become --ask-become-pass
+
+  07-Mettre-à-jour-tous-les-paquets:
+    desc: "Mettre à jour tous les paquets installés vers leur dernière version disponible sur tous les hôtes Ansible."
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible all -m apt -a "upgrade=dist" --become --ask-become-pass                  

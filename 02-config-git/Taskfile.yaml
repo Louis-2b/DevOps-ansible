@@ -29,7 +29,7 @@ tasks:
   04-Commit-changes:
     desc: "Effectuer un commit avec un message"
     cmds:
-      - git commit -m "first version of the inventory file, added hosts."  
+      - git commit -m "first version of ansible.cfg"  
 
   05-Push-changes:
     desc: "Pousser les modifications vers la branche principale"
