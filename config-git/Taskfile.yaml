@@ -1,0 +1,37 @@
+version: "3"
+
+env:
+  BORDER: double
+  BORDER_FOREGROUND: "212"
+  PADDING: "1 1"
+  MARGIN: "1 1"
+
+
+
+tasks:
+  01-Config-git:
+    desc: "Configurer le nom d'utilisateur et l'email Git"
+    cmds:
+      - git config --global user.name "Louis-2b"
+      - git config --global user.email "stephanetchanga2b@gmail.com"
+      - cat ~/.gitconfig
+
+  02-Check-status:
+    desc: "Afficher l'état du dépôt Git"
+    cmds:
+      - git status
+
+  03-Add-changes:
+    desc: "Ajouter tous les fichiers modifiés au prochain commit"
+    cmds:
+      - git add .
+
+  04-Commit-changes:
+    desc: "Effectuer un commit avec un message"
+    cmds:
+      - git commit -m "Mis à jour du fichier readme, first commit"  
+
+  05-Push-changes:
+    desc: "Pousser les modifications vers la branche principale"
+    cmds:
+      - git push origin main     
