@@ -20,10 +20,47 @@ tasks:
       - sudo apt install ansible
 
   08-Creer-fichier-inventory:
-    desc: "Créer le fichier config dans le répertoire .ssh"
+    desc: "Créer le fichier inventory dans le répertoire ~/ansible/DevOps-ansible"
     cmds:
       - touch ~/ansible/DevOps-ansible/inventory
       - |
          echo "
          192.168.222.80
-         " >> ~/ansible/DevOps-ansible/inventory  
+         " >> ~/ansible/DevOps-ansible/inventory
+
+  09-Ping-serveur:
+    desc: "Utiliser Ansible pour vérifier la connectivité avec tous les hôtes de l'inventaire"
+    cmds:
+      - ansible all --key-file ~/.ssh/ansible -i ~/ansible/DevOps-ansible/inventory -m ping -u helm
+
+  10-Creer-fichier-ansible.cfg:
+    desc: "Créer le fichier ansible.cfg dans le répertoire ~/ansible/DevOps-ansible "
+    cmds:
+      - touch ~/ansible/DevOps-ansible/ansible.cfg
+      - |
+         echo "
+         [defaults] 
+         inventory = ~/ansible/DevOps-ansible/inventory
+         private_key_file = ~/.ssh/ansible
+         remote_user = helm 
+         " >> ~/ansible/DevOps-ansible/ansible.cfg 
+
+  11-Ping-serveur:
+    desc: "Utiliser Ansible pour vérifier la connectivité avec tous les hôtes de l'inventaire"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible all -m ping
+
+  12-Lister-hôtes:
+    desc: "Lister tous les hôtes dans l'inventaire Ansible"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible all --list-hosts
+
+  13-Gather-facts:
+    desc: "Récupérer les faits des hôtes dans l'inventaire Ansible"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible all -m gather_facts
+
+  14-Gather-facts:
+    desc: "Récupérer les faits d'un hôtes dans l'inventaire Ansible"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible all -m gather_facts --limit 192.168.222.80                             
