@@ -15,13 +15,8 @@
       upgrade: dist
     when: ansible_distribution == "Ubuntu"
 
-  - name: Mettre à jour le cache DNF
+  - name: Mettre à jour tous les paquets CentOS
     dnf:
       update_cache: true
-    when: ansible_distribution == "CentOS" and ansible_distribution_version == "8"  
-
-  - name: Installer les mises à jour disponibles
-    dnf:
-      upgrade: dist
-    when: ansible_distribution == "CentOS" and ansible_distribution_version == "8"  
+    when: ansible_distribution == "CentOS" and ansible_distribution_version == "9" 
 

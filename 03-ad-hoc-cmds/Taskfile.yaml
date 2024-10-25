@@ -32,7 +32,7 @@ tasks:
          192.168.222.25 ansible_user=monitor
 
          [terraform_servers]
-         192.168.222.45 ansible_user=sadmin
+         192.168.222.45 ansible_user=terraform
          " >> ~/ansible/DevOps-ansible/inventory
 
   09-Ping-serveur:

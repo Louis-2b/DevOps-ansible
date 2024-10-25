@@ -8,34 +8,22 @@
   - name: Mettre à jour le cache APT
     apt:
       update_cache: true 
-    when: ansible_distribution == "Ubuntu"   
-
-  - name: Installer le paquet apache2
-    apt:
-      name: apache2
-      state: latest
-    when: ansible_distribution == "Ubuntu"   
-
-  - name: Ajouter php support pour apache
-    apt:
-      name: libapache2-mod-php
-      state: latest
     when: ansible_distribution == "Ubuntu"
 
-  - name: Mettre à jour le cache DNF
+  - name: Mettre à jour tous les paquets CentOS
     dnf:
       update_cache: true
-    when: ansible_distribution == "CentOS" and ansible_distribution_version == "8"  
+    when: ansible_distribution == "CentOS" and ansible_distribution_version == "9"  
 
   - name: Installer le paquet httpd
     dnf:
       name: httpd
-      state: latest
-    when: ansible_distribution == "CentOS" and ansible_distribution_version == "8"  
+      state: absent
+    when: ansible_distribution == "CentOS" and ansible_distribution_version == "9"  
 
   - name: Ajouter php support pour apache
     dnf:
       name: php
-      state: latest
-    when: ansible_distribution == "CentOS" and ansible_distribution_version == "8"      
+      state: absent
+    when: ansible_distribution == "CentOS" and ansible_distribution_version == "9"      
 
