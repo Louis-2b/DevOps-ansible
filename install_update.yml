@@ -7,9 +7,21 @@
 
   - name: Mettre à jour le cache APT
     apt:
-      update_cache: yes
+      update_cache: true
+    when: ansible_distribution == "Ubuntu"  
 
   - name: Installer les mises à jour disponibles
     apt:
-      upgrade: dist   
+      upgrade: dist
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Mettre à jour le cache DNF
+    dnf:
+      update_cache: true
+    when: ansible_distribution == "CentOS" and ansible_distribution_version == "8"  
+
+  - name: Installer les mises à jour disponibles
+    dnf:
+      upgrade: dist
+    when: ansible_distribution == "CentOS" and ansible_distribution_version == "8"  
 
