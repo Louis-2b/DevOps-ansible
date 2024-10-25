@@ -1,0 +1,73 @@
+version: "3"
+
+env:
+  BORDER: double
+  BORDER_FOREGROUND: "212"
+  PADDING: "1 1"
+  MARGIN: "1 1"
+
+
+
+tasks:
+  01-Mis-à-jour-système:
+    desc: "Mettre à jour la liste des paquets et installer les mises à jour disponibles"
+    cmds:
+      - sudo apt update && sudo apt upgrade -y
+
+  02-Créer-fichier-install-update:
+    desc: "Créer un fichier Ansible pour installer et mettre à jour les paquets"
+    cmds:
+      - touch ~/ansible/DevOps-ansible/install_update.yml
+      - |
+        echo "
+        ---
+
+        - hosts: all
+          become: true
+          tasks:
+
+          - name: Mettre à jour le cache APT
+            apt:
+              update_cache: true
+
+          - name: Installer les mises à jour disponibles
+            apt:
+              upgrade: dist
+        " >> ~/ansible/DevOps-ansible/install_update.yml
+
+  03-Exécuter-install-update:
+    desc: "Exécuter le playbook Ansible pour mettre à jour et installer les paquets"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible-playbook --ask-become-pass install_update.yml
+
+  04-Créer-fichier-install-apache:
+    desc: "Créer un fichier Ansible pour installer apache"
+    cmds:
+      - touch ~/ansible/DevOps-ansible/install_apache.yml
+      - |
+        echo "
+        ---
+
+        - hosts: all
+          become: true
+          tasks:
+
+          - name: Mettre à jour le cache APT
+            apt:
+              update_cache: true
+
+          - name: Installer le paquet apache2
+            apt:
+              name: apache2
+              state: latest
+
+          - name: Ajouter php support pour apache
+            apt:
+              name: libapache2-mod-php
+              state: latest    
+        " >> ~/ansible/DevOps-ansible/install_apache.yml 
+
+  05-Copier-fichier-remove-apache:
+    desc: "Créer une copie de install_apache.yml en tant que remove_apache.yml"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && cp install_apache.yml remove_apache.yml      

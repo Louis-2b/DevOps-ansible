@@ -25,7 +25,11 @@ tasks:
       - touch ~/ansible/DevOps-ansible/inventory
       - |
          echo "
-         192.168.222.80
+         [kubernetes_servers] 
+         192.168.222.80 ansible_user=helm
+
+         [monitoring_servers]
+         192.168.222.25 ansible_user=monitor  
          " >> ~/ansible/DevOps-ansible/inventory
 
   09-Ping-serveur:
@@ -42,7 +46,6 @@ tasks:
          [defaults] 
          inventory = ~/ansible/DevOps-ansible/inventory
          private_key_file = ~/.ssh/ansible
-         remote_user = helm 
          " >> ~/ansible/DevOps-ansible/ansible.cfg 
 
   11-Ping-serveur:
@@ -63,4 +66,5 @@ tasks:
   14-Gather-facts:
     desc: "Récupérer les faits d'un hôtes dans l'inventaire Ansible"
     cmds:
-      - cd ~/ansible/DevOps-ansible && ansible all -m gather_facts --limit 192.168.222.80                             
+     # - cd ~/ansible/DevOps-ansible && ansible all -m gather_facts --limit 192.168.222.80  
+      - cd ~/ansible/DevOps-ansible && ansible all -m gather_facts --limit 192.168.222.25                           
