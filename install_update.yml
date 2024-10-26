@@ -5,18 +5,16 @@
   become: true
   tasks:
 
-  - name: Mettre à jour le cache APT
+  - name: Mettre à jour le cache APT et Installer les mises à jour disponibles
     apt:
-      update_cache: true
-    when: ansible_distribution == "Ubuntu"  
-
-  - name: Installer les mises à jour disponibles
-    apt:
+      update_cache: yes
       upgrade: dist
     when: ansible_distribution == "Ubuntu"
-
+      
   - name: Mettre à jour tous les paquets CentOS
     dnf:
-      update_cache: true
+      name: "*"
+      state: latest
+      update_cache: yes
     when: ansible_distribution == "CentOS" and ansible_distribution_version == "9" 
 

@@ -28,17 +28,16 @@ tasks:
 
           - name: Mettre à jour le cache APT et Installer les mises à jour disponibles
             apt:
-              - update_cache: true
-              - upgrade: dist
+              update_cache: yes
+              upgrade: dist
             when: ansible_distribution == \"Ubuntu\"
               
-          - name: Mettre à jour le cache DNF et Installer les mises à jour disponibles
+          - name: Mettre à jour tous les paquets CentOS
             dnf:
-              - update_cache: true
-              - upgrade: dist
-            when: ansible_distribution == \"CentOS\" and ansible_distribution_version == \"8\"
-
-            when: ansible_distribution == \"CentOS\" and ansible_distribution_version == \"8\"  
+              name: \"*\"
+              state: latest
+              update_cache: yes
+            when: ansible_distribution == \"CentOS\" and ansible_distribution_version == \"9\" 
         " >> ~/ansible/DevOps-ansible/install_update.yml
 
   03-Exécuter-install-update:
@@ -58,23 +57,14 @@ tasks:
           become: true
           tasks:
 
-          - name: Mettre à jour le cache APT
+          - name: Installer apache2 et php packages pour Ubuntu
             apt:
-              update_cache: true 
-            when: ansible_distribution == \"Ubuntu\"   
-
-          - name: Installer le paquet apache2 et php support pour apache
-            apt:
-              name: 
+              name:
                 - apache2
                 - libapache2-mod-php
-              state: latest
-            when: ansible_distribution == \"Ubuntu\"
-
-          - name: Mettre à jour le cache DNF
-            dnf:
-              update_cache: true
-            when: ansible_distribution == \"CentOS\" and ansible_distribution_version == \"8\"  
+              state: latest  
+              update_cache: yes
+            when: ansible_distribution == \"Ubuntu\" 
 
           - name: Installer le paquet httpd et Ajouter php support pour apache
             dnf:
@@ -82,6 +72,11 @@ tasks:
                 - httpd
                 - php
               state: latest
-            when: ansible_distribution == \"CentOS\" and ansible_distribution_version == \"8\"
-
+              update_cache: yes
+            when: ansible_distribution == \"CentOS\" and ansible_distribution_version == \"9\"
         " >> ~/ansible/DevOps-ansible/install_apache.yml
+
+  05-Exécuter-install-apache:
+    desc: "Exécuter le playbook Ansible pour mettre à jour et installer les paquets"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible-playbook --ask-become-pass install_apache.yml      

@@ -5,25 +5,21 @@
   become: true
   tasks:
 
-  - name: Mettre à jour le cache APT
+  - name: Installer apache2 et php packages pour Ubuntu
     apt:
-      update_cache: true 
-    when: ansible_distribution == "Ubuntu"
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: absent 
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu" 
 
-  - name: Mettre à jour tous les paquets CentOS
+  - name: Installer le paquet httpd et Ajouter php support pour apache
     dnf:
-      update_cache: true
-    when: ansible_distribution == "CentOS" and ansible_distribution_version == "9"  
-
-  - name: Installer le paquet httpd
-    dnf:
-      name: httpd
+      name: 
+        - httpd
+        - php
       state: absent
-    when: ansible_distribution == "CentOS" and ansible_distribution_version == "9"  
-
-  - name: Ajouter php support pour apache
-    dnf:
-      name: php
-      state: absent
-    when: ansible_distribution == "CentOS" and ansible_distribution_version == "9"      
+      update_cache: yes
+    when: ansible_distribution == "CentOS" and ansible_distribution_version == "9"
 

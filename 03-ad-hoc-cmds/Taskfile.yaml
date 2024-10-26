@@ -12,7 +12,7 @@ tasks:
   01-Mis-à-jour-système:
     desc: "Mettre à jour la liste des paquets et installer les mises à jour disponibles"
     cmds:
-      - sudo apt update && sudo apt upgrade -y
+      - sudo apt update && sudo apt dist-upgrade
 
   02-Installer-ansible:
     desc: "Installer Ansible à partir des dépôts APT"

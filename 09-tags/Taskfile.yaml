@@ -1,0 +1,94 @@
+version: "3"
+
+env:
+  BORDER: double
+  BORDER_FOREGROUND: "212"
+  PADDING: "1 1"
+  MARGIN: "1 1"
+
+
+tasks:
+  01-Créer-fichier-install-apache:
+    desc: "Créer un fichier Ansible pour installer apache"
+    cmds:
+      - touch ~/ansible/DevOps-ansible/site.yml
+      - |
+        echo "
+        ---
+
+        - hosts: all
+          become: true
+          tasks:
+        
+          - name: installer les mises à jour (CentOS)
+            tags: always
+            dnf:
+              update_only: yes
+              update_cache: yes
+            when: ansible_distribution == \"CentOS\" and ansible_distribution_version == \"9\"
+
+          - name: installer les mises à jour (Ubuntu)
+            tags: always
+            apt:
+              upgrade: dist
+              update_cache: yes 
+            when: ansible_distribution == \"Ubuntu\" 
+
+
+
+        - hosts: terraform_servers
+          become: true
+          tasks:        
+
+          - name: Installer apache2 et php packages pour Ubuntu
+            tags: apache,apache2,ubuntu
+            apt:
+              name:
+                - apache2
+                - libapache2-mod-php
+              state: latest
+            when: ansible_distribution == \"Ubuntu\" 
+
+          - name: Installer le paquet httpd et Ajouter php support pour apache
+            tags: apache,centos,httpd
+            dnf:
+              name: 
+                - httpd
+                - php
+              state: latest
+            when: ansible_distribution == \"CentOS\" and ansible_distribution_version == \"9\"
+
+
+        - hosts: monitoring_servers
+          become: true
+          tasks:
+
+          - name: installer mariadb package (CentOS)
+            tags: centos,monitor,mariadb
+            dnf:
+              name: mariadb
+              state: latest
+            when: ansible_distribution == \"CentOS\" and ansible_distribution_version == \"9\"  
+
+          - name: installer mariadb package (Ubuntu)
+            tags: monitor,mariadb,ubuntu
+            apt:
+              name: mariadb-server
+              state: latest
+            when: ansible_distribution == \"Ubuntu\"     
+        " >> ~/ansible/DevOps-ansible/site.yml
+
+  02-Exécuter-install-apache:
+    desc: "Exécuter le playbook Ansible pour mettre à jour et installer les paquets"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible-playbook --ask-become-pass site.yml
+
+  03-Lister-tags:
+    desc: "Lister les tags disponibles dans le playbook Ansible"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible-playbook --list-tags site.yml
+
+  04-Exécuter-install-apache:
+    desc: "Exécuter le playbook Ansible pour mettre à jour et installer les paquets sur CentOS uniquement"
+    cmds:
+      - cd ~/ansible/DevOps-ansible && ansible-playbook --tags centos --ask-become-pass site.yml        
